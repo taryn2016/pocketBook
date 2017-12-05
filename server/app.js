@@ -48,8 +48,8 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-// 测试接口
-router.get('/test', function (req, res) {
+// 测试接口             
+router.post('/test', function (req, res) {
   // connection.connect()
   let sql = 'SELECT * FROM user'
   connection.query(sql, function (err, result) {
@@ -62,5 +62,7 @@ router.get('/test', function (req, res) {
   })
   // connection.end()
 });
-
+router.post('/CreateUser', function (req, res) {
+  let sql = ''
+})
 module.exports = app;
