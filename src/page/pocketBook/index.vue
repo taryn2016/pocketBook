@@ -11,8 +11,6 @@
 <script>
 import pocketNav from './pocketNav.vue'
 import datePicker from '../../components/datePicker.vue'
-// import axios from 'axios'
-// import { baseUrl } from '../../utils/index.js'
 import fetch from '../../utils/fetch.js'
 export default {
   name: 'app',
@@ -46,16 +44,10 @@ export default {
     },
     createUser () {
       fetch('/CreateUser', {
-        email: '13234',
+        email: 'taryn2016@outlook.com',
         password: '1234',
         usertoken: 'test'
       }).then((res) => {
-        // console.log(res)
-        // this.test = res.data
-        // if (res.data.code === 0) {
-        //   this.test = res.data.message
-        // }
-        console.log(res)
       }).catch((err) => {
         console.log(err)
       })
@@ -63,7 +55,7 @@ export default {
   },
   mounted () {
     // do something after mounting vue instance
-    this.createUser()
+    // this.createUser()
   }
 }
 </script>

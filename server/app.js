@@ -9,6 +9,7 @@ var appdb = require('./app.js')
 var app = express();
 var router = express.Router();
 var bodyParser = require("body-parser")
+var nodemailer = require('nodemailer')// 邮件
 var connection = mysql.createConnection({
   host     : 'localhost',
   user     : 'root',
@@ -16,7 +17,13 @@ var connection = mysql.createConnection({
   port: '3306',
   database: 'pocketBookDB'
 });
-
+var transporter = nodemailer.createTransport({
+  service: 'qq',
+  auth: {
+    user: '1981138151@qq.com',
+    pass: 'isbvzsgblsnmcfjj' //授权码,通过QQ获取
+  }
+});
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -75,7 +82,7 @@ router.post('/CreateUser', function (req, res) {
       userid = 10001
     }
     let sql = `INSERT user_info(userid, email, password, usertoken, createtime, expiretime, activated) values
-    (${userid} , '${data.email}', '${data.password}', '${data.usertoken}', ${Date.now()}, ${Date.now() + 60*60*60*24*7}, 1)`
+    (${userid},'${data.email}', '${data.password}', '${data.usertoken}', ${Date.now()}, ${Date.now() + 60*60*60*24*7}, 0)`
     connection.query(sql, function (err, result) {
       if(err){
         console.log('[CreateUser] - ',err.message);
@@ -83,6 +90,35 @@ router.post('/CreateUser', function (req, res) {
       }
       res.json(result)
     })
+  })
+  var mailOptions = {
+    from: '1981138151@qq.com', // 发送者
+    to: data.email, // 接受者,可以同时发送多个,以逗号隔开
+    subject: 'nodemailer2.5.0邮件发送', // 标题
+    text: 'Hello world', // 文本
+    html: `<h2>nodemailer基本使用:</h2><h3>
+    <a href="http://127.0.0.1:3000/ActivateUser?useEmail=${data.email}">
+    点击激活</a></h3>`
+  };
+
+  transporter.sendMail(mailOptions, function (err, info) {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    console.log('发送成功');
+  });
+})
+router.get('/ActivateUser', function (req, res) {
+  var useEmail = req.query.useEmail
+  console.log(useEmail);
+  var sql = `update user_info set activated=1 where email='${useEmail}'`
+  connection.query(sql, function (err, result) {
+    if(err){
+      console.log('[CreateUser] - ',err.message);
+      return;
+    }
+    res.write('<!DOCTYPE html><html data-dpr="1"><head><meta charset="utf-8"><title>pocket-book</title></head><body><p>激活成功</p></body></html>')
   })
 })
 module.exports = app;
