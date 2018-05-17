@@ -10,6 +10,7 @@ var app = express();
 var router = express.Router();
 var bodyParser = require("body-parser")
 var nodemailer = require('nodemailer')// 邮件
+var crypto = require('crypto'); //md5加密
 var connection = mysql.createConnection({
   host     : 'localhost',
   user     : 'root',
@@ -24,6 +25,7 @@ var transporter = nodemailer.createTransport({
     pass: 'isbvzsgblsnmcfjj' //授权码,通过QQ获取
   }
 });
+// var md5 = crypto.createHash(‘md5’);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -121,4 +123,7 @@ router.get('/ActivateUser', function (req, res) {
     res.write('<!DOCTYPE html><html data-dpr="1"><head><meta charset="utf-8"><title>pocket-book</title></head><body><p>激活成功</p></body></html>')
   })
 })
+// router.post('/Login', function (req, res) {
+//   req
+// })
 module.exports = app;
